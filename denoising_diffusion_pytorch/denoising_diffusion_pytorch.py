@@ -1250,10 +1250,7 @@ class GaussianDiffusion(nn.Module):
 		# mask = torch.cat((mask1, mask[:, 20:, :, :]), dim=1)  
 		mask = torch.cat((mask1, mask[:, self.channels:, :, :]), dim=1)  
 
-		# file=open(r"{}/mask.pickle".format("/zhangqianru/code/results_ddpm_z256_renew_mstart"),"wb")
-		# pickle.dump(mask,file) #storing_list
-		# file.close()
-		
+
 		
 		x_0_hat_s = torch.cat((x_0_hat, x_0_hat), dim=1) # B X 20 
 
@@ -1312,17 +1309,12 @@ def load_data(file):
 	return data_load_file
 
 class MyDataset(Dataset):
-	def __init__(self,train):
+	def __init__(self,train,data_path):
 		if train:
-			#self.data = load_data('/yuchenglei/data_wets/wets_train.pickle')[0][:,:10,:]
-			self.data = load_data('/zhangqianru/data/wets_train_32x32.pickle')  #"/zhangqianru/data/train_data_tension.pickle"
-			# self.data = load_data('/zhangqianru/data/train_data_tension.pickle') 
-   			# self.data, self.label = load_data('/zhangqianru/data/jellyfish_gentle_Tailin/train_data_jellyfish.pickle')[0], load_data('/zhangqianru/data/jellyfish_gentle_Tailin/train_data_jellyfish.pickle')[1]
-			# print("data:", self.data)
-			# println()
+			self.data = load_data(data_path) 
 		else:
-			#self.data  = load_data('/yuchenglei/data_wets/wets_val.pickle')[0]
-			self.data = load_data('/zhangqianru/data/wets_val.pickle')[0]
+			self.data  = load_data(data_path)
+			
 
 	def __len__(self):
 		return len(self.data)
@@ -1456,7 +1448,7 @@ class Trainer(object):
 
 		# dataset and dataloader
 
-		data_path = "/zhangqianru/data/wets_train_32x32.pickle"
+		
 		self.ds = Dataset(data_path= data_path, train_batch_size= train_batch_size, val_batch_size=  train_batch_size, patch_size= 256, num_workers= 0)
 		self.ds.setup()
 		# self.ds = Dataset(folder, self.image_size, augment_horizontal_flip = augment_horizontal_flip, convert_image_to = convert_image_to)
